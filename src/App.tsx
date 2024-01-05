@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import Home from "./components/pages/Home"
 import Cart from "./components/pages/Cart"
 import Liked from "./components/pages/Liked"
 import Navbar from "./components/Navbar"
 import ProductDetail from "./components/pages/ProductDetail"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 
 
