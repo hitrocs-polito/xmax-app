@@ -16,6 +16,8 @@ const StyledHeart = styled(FontAwesomeIcon)`
   &:hover,
   &.active {
     color: red; 
+    user-select: none;
+
   }
 
   &.noactive {

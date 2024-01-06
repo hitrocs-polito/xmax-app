@@ -32,6 +32,7 @@ const CartCounter = styled.span`
   min-width: 15px;
   text-align: center; 
   font-weight: 500;
+  user-select: none;
 `
 
 
