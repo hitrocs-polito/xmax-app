@@ -8,6 +8,7 @@ const CartContainer = styled.div`
   cursor: pointer;
   position: absolute;
   right: 0;
+  user-select: none;
 `;
 
 const QuantityControl = styled.div`
