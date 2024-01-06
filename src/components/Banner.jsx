@@ -7,11 +7,15 @@ const Bg = styled.div`
   background-color: #101010;
   color: #fff;
   padding: 0px 0;
-  margin: 22px auto 0;
+  margin: 10px auto 0;
   border-radius: 30px;
 
   @media screen and (max-width: 768px){
     height: 176px;
+  }
+
+  @media screen and (max-width: 568px){
+    width: 85%;
   }
 `
 

@@ -4,6 +4,7 @@ import Liked from "./components/pages/Liked"
 import Navbar from "./components/Navbar"
 import ProductDetail from "./components/pages/ProductDetail"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Footer from "./components/Footer"
 
 
 
@@ -18,6 +19,7 @@ function App() {
           <Route path='/liked' element={<Liked />} />
           <Route path="/products/:id" element={<ProductDetail />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   )

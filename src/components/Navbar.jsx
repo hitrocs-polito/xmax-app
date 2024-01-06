@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as farHeart} from '@fortawesome/free-regular-svg-icons';
 import Center from './Center';
 import { Link } from "react-router-dom"
+import ModelDropdown from './ModelDropdown';
 
 
 const StyledHeader = styled.header`
@@ -55,17 +56,21 @@ const StyledNav = styled.div`
 
 function Navbar() {
   return (
-    <StyledHeader>
     <Center>
-      <Wrapper>
-        <Logo href={"/"}>X-MAX MOBILE</Logo>
-        <StyledNav>
-          <Link style={{ textDecoration: 'none', color: '#aaa', position: 'relative'}} to="/liked"><FontAwesomeIcon icon={farHeart} size="2x" /></Link>
-          <Link style={{ textDecoration: 'none', color: '#aaa', position: 'relative' }} to="/cart"><FaShoppingCart size={30}/></Link>
-        </StyledNav>
-      </Wrapper>
+      <StyledHeader>
+        <Wrapper>
+          <div style={{display: 'flex', justifyContent: "center", alignItems: 'center', gap: '3rem'}}>
+            <Logo href={"/"}>X-MAX MOBILE</Logo>
+            <ModelDropdown />
+          </div>
+          <StyledNav>
+            <Link style={{ textDecoration: 'none', color: '#aaa', position: 'relative'}} to="/liked"><FontAwesomeIcon icon={farHeart} size="2x" /></Link>
+            <Link style={{ textDecoration: 'none', color: '#aaa', position: 'relative' }} to="/cart"><FaShoppingCart size={30}/></Link>
+          </StyledNav>
+        </Wrapper>
+      </StyledHeader>
     </Center>
-    </StyledHeader>
+
   )
 }
 
