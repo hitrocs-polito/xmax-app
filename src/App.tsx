@@ -5,12 +5,16 @@ import Navbar from "./components/Navbar"
 import ProductDetail from "./components/pages/ProductDetail"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Footer from "./components/Footer"
+import { CartContextProvider } from "./components/CartContext"
+import { LikedContextProvider } from "./components/FavouriteContext"
 
 
 
 function App() {
   return (
     <div>
+      <LikedContextProvider>
+      <CartContextProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -21,6 +25,8 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
+      </CartContextProvider>
+      </LikedContextProvider>
     </div>
   )
 }

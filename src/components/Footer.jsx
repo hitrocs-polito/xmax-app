@@ -6,7 +6,7 @@ const FooterStyle = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   background-color: white;
-  margin: 0;
+  margin: 20px 0 0;
   padding: 20px 29px;
   border-radius: 30px 30px 0 0;
   font-weight: 500;

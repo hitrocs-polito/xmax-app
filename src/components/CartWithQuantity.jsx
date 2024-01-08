@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PlusIcon from './icons/PlusIcon';
 import MinusIcon from './icons/MinusIcon';
@@ -43,10 +43,24 @@ function CartWithQuantity({onClick}) {
   const [quantity, setQuantity] = useState(1);
   const [showCart, setShowCart] = useState(true);
 
+  useEffect(() => {
+    // Check for cart data in localStorage
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      const storedQuantities = JSON.parse(storedCart);
+      const itemQuantity = storedQuantities[2] || 1; // Get item's quantity or default to 1
+      setQuantity(itemQuantity);
+    }
+  }, []);
+
+
   const handleIncrement = () => {
     setQuantity(prevQuantity => prevQuantity + 1);
     onClick('increment');
+    updateCartStorage();
   };
+
+
 
   const handleDecrement = () => {
     if (quantity > 1) {
@@ -57,11 +71,25 @@ function CartWithQuantity({onClick}) {
       onClick('toggle');
       onClick('decrement')
     }
+
+    updateCartStorage();
   };
 
   const toggleCart = () => {
     setShowCart(!showCart);
     onClick('increment');
+  };
+
+  const updateCartStorage = () => {
+    // Get existing cart data or create a new array
+    const storedCart = localStorage.getItem('cart') || '[]';
+    const storedQuantities = JSON.parse(storedCart);
+
+    // Update quantity for the specific item
+    // storedQuantities[itemId] = quantity;
+
+    // Store updated cart data back to localStorage
+    localStorage.setItem('cart', JSON.stringify(storedQuantities));
   };
 
   return (

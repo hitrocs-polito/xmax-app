@@ -1,10 +1,11 @@
 import React from 'react'
+import Center from '../Center'
 
 function Cart() {
   return (
-    <div>
+    <Center>
       <h1>Cart page</h1>
-    </div>
+    </Center>
   )
 }
 

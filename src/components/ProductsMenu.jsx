@@ -42,7 +42,7 @@ function ProductsMenu() {
 
   return (
     <Center>
-      <Title>телефоны</Title>
+      <Title>Телефоны</Title>
       <ProductsGrid>
         {phoneDatabase.map(product => (
           <ProductCard key={product.id} {...product} />

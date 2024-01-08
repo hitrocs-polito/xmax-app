@@ -36,20 +36,20 @@ const Card = styled.div`
   height: max-content;
 
   img {
-    max-width: 100%;
+    /* max-width: 100%; */
     max-height: 100%;
   }
 
   &:hover {
     -webkit-box-shadow: 0px 3px 5px -3px rgba(0,0,0,0.75);
--moz-box-shadow: 0px 3px 5px -3px rgba(0,0,0,0.75);
-box-shadow: 0px 3px 5px -3px rgba(0,0,0,0.75);
-transition: box-shadow 0.3s ease-in-out;
+    -moz-box-shadow: 0px 3px 5px -3px rgba(0,0,0,0.75);
+    box-shadow: 0px 3px 5px -3px rgba(0,0,0,0.75);
+    transition: box-shadow 0.3s ease-in-out;
   }
 
   @media (max-width: 480px) {
     img {
-      height: auto; 
+      /* height: auto;  */
     }
 
     Title {
@@ -60,6 +60,7 @@ transition: box-shadow 0.3s ease-in-out;
 
 const Image = styled.img`
   width: 100%;
+  height: 100%;
   transition: transform 0.3s ease-in-out;
 
   &:hover {
@@ -70,7 +71,7 @@ const Image = styled.img`
 const WhiteBox = styled.div`
   background-color: white;
   padding: 20px; 
-  height: 300px;
+  height: 280px;
   width: auto;
   text-align: center;
   display: flex;
@@ -82,9 +83,23 @@ const WhiteBox = styled.div`
   
 
   img{
-    max-width: 250px;
-    max-height: 350px;
+    max-width: 300px;
+    max-height: 400px;
   }
+
+  @media (max-width: 1100px) {
+    height: 250px;
+  }
+
+  @media (max-width: 800px) {
+    height: 250px;
+  }
+
+  @media (max-width: 600px) {
+    height: 300px;
+  }
+;
+
 `
 
 const Title = styled.h2`
@@ -119,9 +134,10 @@ function ProductCard({ id, title, price, imgUrl }) {
   const [isHeartActive, setIsHeartActive] = useState(false); // State for heart active state
 
   const handleHeartClick = () => {
-    setIsHeartActive(!isHeartActive);
+    const newIsHeartActive = !isHeartActive;
+    setIsHeartActive(newIsHeartActive);
 
-    if (!isHeartActive) {
+    if (newIsHeartActive) {
       addLikedProduct(id);
     } else {
       removeLikedProduct(id);

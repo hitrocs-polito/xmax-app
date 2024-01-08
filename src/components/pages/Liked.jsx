@@ -1,10 +1,11 @@
 import React from 'react'
+import Center from '../Center'
 
 function Liked() {
   return (
-    <div>
+    <Center>
       <h1>Liked page</h1>
-    </div>
+    </Center>
   )
 }
 
