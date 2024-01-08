@@ -26,18 +26,6 @@ const QuantityButton = styled.button`
   cursor: pointer;
 `;
 
-const CartCounter = styled.span`
-  /* background-color: #FFA542; */
-  /* color: white; */
-  /* border-radius: 50%;
-  padding: 4px 9px;
-  font-size: 20px;
-  min-width: 15px;
-  text-align: center; 
-  font-weight: 500; */
-  user-select: none;
-`
-
 const QuantityStyle = styled.div`
   width: 1rem;
   text-align: center;
@@ -107,15 +95,11 @@ function CartWithQuantity({onClick}) {
       ) : (
         <QuantityControl>
           <QuantityButton onClick={handleDecrement}>
-            <CartCounter>
               <MinusIcon />
-            </CartCounter>
           </QuantityButton>
           <QuantityStyle>{quantity}</QuantityStyle>
           <QuantityButton onClick={handleIncrement}>
-            <CartCounter>
               <PlusIcon />
-            </CartCounter>
           </QuantityButton>
         </QuantityControl>
       )}
