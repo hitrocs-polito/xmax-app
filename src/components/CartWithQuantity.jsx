@@ -38,6 +38,11 @@ const CartCounter = styled.span`
   user-select: none;
 `
 
+const QuantityStyle = styled.div`
+  width: 1rem;
+  text-align: center;
+`
+
 
 function CartWithQuantity({onClick}) {
   const [quantity, setQuantity] = useState(1);
@@ -106,7 +111,7 @@ function CartWithQuantity({onClick}) {
               <MinusIcon />
             </CartCounter>
           </QuantityButton>
-          <div>{quantity}</div>
+          <QuantityStyle>{quantity}</QuantityStyle>
           <QuantityButton onClick={handleIncrement}>
             <CartCounter>
               <PlusIcon />
