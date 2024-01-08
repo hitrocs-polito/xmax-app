@@ -1,8 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import CartWithQuantity from './CartWithQuantity';
+import CartContext from './CartContext';
+import LikedContext from './FavouriteContext';
 
 const StyledHeart = styled(FontAwesomeIcon)`
   position: absolute;
@@ -31,9 +33,11 @@ const Card = styled.div`
   transition: box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
+  height: max-content;
 
   img {
     max-width: 100%;
+    max-height: 100%;
   }
 
   &:hover {
@@ -108,27 +112,27 @@ const Price = styled.div`
   font-weight: bold;
 `
 
-function ProductCard({ title, price, imgUrl }) {
-
+function ProductCard({ id, title, price, imgUrl }) {
+  const { addProduct, removeProduct } = useContext(CartContext);
+  const { addLikedProduct, removeLikedProduct } = useContext(LikedContext);
+  
   const [isHeartActive, setIsHeartActive] = useState(false); // State for heart active state
 
   const handleHeartClick = () => {
-    // const newIsHeartActive = !isHeartActive;
     setIsHeartActive(!isHeartActive);
 
-    // if (newIsHeartActive) {
-    //   addLikedProduct(id);
-    // } else {
-    //   removeLikedProduct(id);
-    // }
+    if (!isHeartActive) {
+      addLikedProduct(id);
+    } else {
+      removeLikedProduct(id);
+    }
   };
 
   const handleCartClick = (action) => {
     if (action === 'increment') {
-      // addProduct(id);
+      addProduct(id);
     } else if (action === 'decrement') {
-      // removeProduct(id);
-      // Implement the logic to remove the product from local storage or perform the necessary action
+      removeProduct(id);
     }
   };
 
