@@ -74,7 +74,7 @@ const phoneDatabase = [
     color: 'Morning Mist',
     RAM: '8GB',
     memory: '128GB',
-    imgUrl: 'https://fdn2.gsmarena.com/vv/pics/oneplus/oneplus-9-pro-1.jpg',
+    imgUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cQb_JMm8e8cWWeG0U-OHcxt4UoKVqOUQkw&usqp=CAU',
     model: 'Oneplus'
   },
   {
