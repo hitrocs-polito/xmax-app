@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import CartWithQuantity from './CartWithQuantity';
-import CartContext from './CartContext';
-import LikedContext from './FavouriteContext';
+import CartContext from '../../contexts/CartContext';
+import LikedContext from '../../contexts/FavouriteContext';
 
 const StyledHeart = styled(FontAwesomeIcon)`
   position: absolute;

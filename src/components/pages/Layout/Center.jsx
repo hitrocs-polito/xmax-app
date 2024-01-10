@@ -5,7 +5,7 @@ const StyledDiv = styled.div`
   margin: 0 auto;
   padding: 0;
 
-  @media screen and (max-width: 568px){
+  @media screen and (max-width: 568pxW){
     max-width: 85%;
   }
 `

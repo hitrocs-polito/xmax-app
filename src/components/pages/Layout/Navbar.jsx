@@ -9,8 +9,8 @@ import { faHeart as farHeart} from '@fortawesome/free-regular-svg-icons';
 import Center from './Center';
 import { Link } from "react-router-dom"
 import ModelDropdown from './ModelDropdown';
-import CartContext from './CartContext';
-import LikedContext from './FavouriteContext';
+import CartContext from '../../contexts/CartContext';
+import LikedContext from '../../contexts/FavouriteContext';
 
 
 const StyledHeader = styled.header`

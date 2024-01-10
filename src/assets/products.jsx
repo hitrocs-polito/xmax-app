@@ -10,6 +10,7 @@ const phoneDatabase = [
     memory: '128GB',
     imgUrl: 'https://olcha.uz/image/700x700/products/2021-09-24/apple-iphone-13-pro-256gb-25274-0.jpeg',
     model: 'Apple'
+    
   },
   {
     id: 2,

@@ -44,14 +44,15 @@ const ModelDropdown = () => {
           <DropdownList>
             {modelOptions.map((option) => (
               <DropdownListItem key={option} onClick={() => handleModelClick(option)}>
-                {option}
 
+                {option}
               </DropdownListItem>
             ))}
           </DropdownList>
         )}
       </DropdownContainer>
     </Center>
+    
   );
 };
 

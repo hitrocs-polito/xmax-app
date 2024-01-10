@@ -1,8 +1,8 @@
 import React from 'react'
-import Center from './Center'
+import Center from '../Layout/Center'
 import styled from 'styled-components'
 import ProductCard from './ProductCard'
-import phoneDatabase from '../assets/products'
+import phoneDatabase from '../../../assets/products'
 
 const Title = styled.h2`
   font-size: 1.5rem;
@@ -39,7 +39,6 @@ function ProductsMenu() {
   // const [filteredPhones, setFilteredPhones] = useState(phoneDatabase);
 
 
-
   return (
     <Center>
       <Title>Телефоны</Title>
@@ -48,7 +47,7 @@ function ProductsMenu() {
           <ProductCard key={product.id} {...product} />
         )) }
       </ProductsGrid>
-    </Center>
+    </Center>   
   )
 }
 

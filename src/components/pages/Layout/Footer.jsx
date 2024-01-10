@@ -21,6 +21,7 @@ const FooterStyle = styled.div`
     padding: 15px 0 15px 15px;
     font-size: 15px
   }
+  
 `
 
 const FooterTitle = styled.h2`

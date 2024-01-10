@@ -1,8 +1,8 @@
 import React from 'react'
 
-function EmptyCart() {
+function EmptyCart(props) { 
   return (
-      <svg width="410" height="315" viewBox="0 0 410 315" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width={props.width} height={props.height} viewBox="0 0 410 315" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_227_269)">
         <path d="M29.2111 290.191C37.9311 306.42 56.4381 313.388 56.4381 313.388C56.4381 313.388 60.8071 294.041 52.0871 277.811C43.3671 261.581 24.8602 254.614 24.8602 254.614C24.8602 254.614 20.4911 273.961 29.2111 290.191Z" fill="#FFA542"/>
         <path d="M35.2047 284.851C50.9479 294.357 57.0111 313.238 57.0111 313.238C57.0111 313.238 37.5496 316.707 21.8064 307.201C6.0632 297.695 0 278.814 0 278.814C0 278.814 19.4616 275.345 35.2047 284.851Z" fill="#FFCE7F"/>

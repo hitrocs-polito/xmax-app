@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PlusIcon from './icons/PlusIcon';
-import MinusIcon from './icons/MinusIcon';
+import PlusIcon from '../../icons/PlusIcon';
+import MinusIcon from '../../icons/MinusIcon';
 // import { FaShoppingCart } from 'react-icons/fa';
 
 const CartContainer = styled.div`

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Center from "./Center"
+import Center from "../Layout/Center"
 
 const Bg = styled.div`
   width: 80%;
