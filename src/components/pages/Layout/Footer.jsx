@@ -61,7 +61,7 @@ const ListStyle = styled.li`
   cursor: pointer;
 `
 
-const LangStyle = styled.li`
+const LangStyle = styled.ul`
   display: flex;
   gap: 10px;
   
