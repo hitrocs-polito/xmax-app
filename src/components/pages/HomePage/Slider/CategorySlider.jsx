@@ -36,12 +36,17 @@ function makeSliderDraggable() {
 
   const handleTouchMove = (e) => {
     if (!isDragging) return;
+
     const touchX = e.touches[0].clientX;
-    const sensitivityFactor = 4; // Adjust the sensitivity by multiplying with a higher factor
+    const sensitivityFactor = 50; // Adjust the sensitivity by multiplying with a higher factor
     const deltaX = (touchX - touchStartX) * sensitivityFactor;
     tabsBox.scrollLeft -= deltaX;
+
     touchStartX = touchX;
-    handleIcons();
+    
+    requestAnimationFrame(() => {
+      handleIcons();
+    });
   };
 
   const handleTouchEnd = () => {
