@@ -3,6 +3,7 @@ import Center from '../Layout/Center'
 import styled from 'styled-components'
 import ProductCard from './ProductCard'
 import phoneDatabase from '../../../assets/products'
+import ModelDropdown from '../Layout/ModelDropdown'
 
 const Title = styled.h2`
   font-size: 1.5rem;
@@ -41,6 +42,7 @@ function ProductsMenu() {
 
   return (
     <Center>
+      <ModelDropdown />
       <Title>Телефоны</Title>
       <ProductsGrid>
         {phoneDatabase.map(product => (

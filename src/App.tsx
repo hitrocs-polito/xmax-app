@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Footer from "./components/pages/Layout/Footer"
 import { CartContextProvider } from "./components/contexts/CartContext"
 import { LikedContextProvider } from "./components/contexts/FavouriteContext"
+import Layout from "./components/pages/Layout/Layout"
 
 
 
@@ -16,14 +17,14 @@ function App() {
       <LikedContextProvider>
       <CartContextProvider>
       <BrowserRouter>
-        <Navbar />
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/liked' element={<Liked />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
+          <Route element={<Layout />}>
+            <Route path='/' element={<Home />} />
+            <Route path='/cart' element={<Cart />} />
+            <Route path='/liked' element={<Liked />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+          </Route>
         </Routes>
-        <Footer />
       </BrowserRouter>
       </CartContextProvider>
       </LikedContextProvider>

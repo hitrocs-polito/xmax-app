@@ -62,9 +62,6 @@ const DropdownContainer = styled.div`
   width: 19rem;
   margin: 20px 0;
 
-  @media (max-width: 600px) {
-    display: none;
-    }
 `;
 
 const DropdownButton = styled.button`

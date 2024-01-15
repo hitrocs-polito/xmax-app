@@ -13,8 +13,18 @@ const ProductContainer = styled.div`
   background: #FFF;
   box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.10);
 
+  @media screen and (max-width: 1286px) {
+    width: 550px;
+  }
+  
+  @media screen and (max-width: 1150px) {
+    width: 450px;
+  }
+
+
+
   @media screen and (max-width: 1024px) {
-    width: 430px;
+    width: 400px;
   }
 
   @media screen and (max-width: 820px) {
@@ -79,14 +89,22 @@ const SecondColumn = styled.div`
   justify-content: center;
   align-items: start;
   padding: 50px 0;
-  margin-right: 100px;
+  margin-right: 220px;
   @media screen and (max-width: 600px){
     padding: 0px 0 30px;
     margin-right: 0px;
   }
 
+  @media screen and (max-width: 1286px) {
+    margin-right: 150px;
+  }
+
+  @media screen and (max-width: 1150px) {
+    margin-right: 100px;
+  }
+  
   @media screen and (max-width: 1024px) {
-    margin-right: 30px;
+    margin-right: 20px;
   }
 `
 
@@ -96,8 +114,7 @@ const ThirdColumn = styled.div`
   justify-content: space-between;
   align-items: end;
   padding: 18px 0;
-
-
+  
   @media screen and (max-width: 1024px) {
     padding-right: 30px;
   }

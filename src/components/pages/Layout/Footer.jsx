@@ -17,8 +17,8 @@ const FooterStyle = styled.div`
   }
 
   @media screen and (max-width: 600px){
-    grid-template-columns: 1fr 1fr;
-    padding: 15px 0 15px 15px;
+    grid-template-columns: .5fr 1.5fr;
+    padding: 15px 0 15px;
     font-size: 15px
   }
   
@@ -38,6 +38,10 @@ const UlStyle = styled.ul`
   gap: 15px;
   margin: 0;
   padding-left: 20px;
+
+  @media screen and (max-width: 600px){
+    align-items: start;
+  }
   
 `
 
@@ -64,6 +68,7 @@ const ListStyle = styled.li`
 const LangStyle = styled.ul`
   display: flex;
   gap: 10px;
+  padding: 0;
   
 `
 
@@ -83,6 +88,9 @@ const SocialStyle = styled.ul`
   @media screen and (max-width: 500px){
     display: flex;
     justify-content: center;
+    gap: 10px;
+    
+
   }
 `
 

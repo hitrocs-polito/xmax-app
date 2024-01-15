@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as farHeart} from '@fortawesome/free-regular-svg-icons';
 import Center from './Center';
 import { Link } from "react-router-dom"
-import ModelDropdown from './ModelDropdown';
 import CartContext from '../../contexts/CartContext';
 import LikedContext from '../../contexts/FavouriteContext';
 
@@ -66,7 +65,6 @@ function Navbar() {
         <Wrapper>
           <div style={{display: 'flex', justifyContent: "center", alignItems: 'center', gap: '3rem'}}>
             <Logo href={"/"}>X-MAX MOBILE</Logo>
-            <ModelDropdown />
           </div>
           <StyledNav>
             <Link style={{ textDecoration: 'none', color: '#aaa', position: 'relative'}} to="/liked"><FontAwesomeIcon icon={farHeart} size="2x" /><CartCounter>{likedProducts.length}</CartCounter></Link>

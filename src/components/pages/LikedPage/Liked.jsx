@@ -1,10 +1,11 @@
 import React from 'react'
 import Center from '../Layout/Center'
+import CategorySlider from '../HomePage/Slider/CategorySlider'
 
 function Liked() {
   return (
     <Center>
-      <h1>Liked page</h1>
+      <CategorySlider />
     </Center>
   )
 }

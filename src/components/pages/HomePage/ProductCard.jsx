@@ -5,6 +5,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import CartWithQuantity from './CartWithQuantity';
 import CartContext from '../../contexts/CartContext';
 import LikedContext from '../../contexts/FavouriteContext';
+import { Link } from 'react-router-dom';
 
 const StyledHeart = styled(FontAwesomeIcon)`
   position: absolute;
@@ -14,6 +15,7 @@ const StyledHeart = styled(FontAwesomeIcon)`
   cursor: pointer;
   user-select: none;
   width: 2rem;
+  z-index: 4;
 
   &:hover,
   &.active {
@@ -62,6 +64,8 @@ const Image = styled.img`
   width: 100%;
   height: 100%;
   transition: transform 0.3s ease-in-out;
+  
+
 
   &:hover {
     transform: scale(1.05);
@@ -127,6 +131,11 @@ const Price = styled.div`
   font-weight: bold;
 `
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+`
+
 function ProductCard({ id, title, price, imgUrl }) {
   const { addProduct, removeProduct } = useContext(CartContext);
   const { addLikedProduct, removeLikedProduct } = useContext(LikedContext);
@@ -161,12 +170,14 @@ function ProductCard({ id, title, price, imgUrl }) {
       className={isHeartActive ? "active" : "noactive"}
       onClick={handleHeartClick}
     />
-        <div>
+        <StyledLink to={`/products/${id}`}>
           <Image src={imgUrl} alt="product-image"></Image>
-        </div>
+        </StyledLink>
       </WhiteBox>
       <DescStyle>
-        <Title>{title}</Title>
+        <StyledLink to={`/products/${id}`}>
+          <Title>{title}</Title>
+        </StyledLink>
         <PriceRow>
           <Price>
             {Math.round(price).toLocaleString('en-US').replace(/,/g, ' ')} сум

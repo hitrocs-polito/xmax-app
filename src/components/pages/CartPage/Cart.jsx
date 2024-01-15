@@ -123,8 +123,12 @@ const TotalPriceContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media screen and (max-width: 820px) {
+  @media screen and (max-width: 962px) {
     width: 250px;
+  }
+  
+  @media screen and (max-width: 780px) {
+    width: 230px;
   }
 
   @media screen and (max-width: 600px){
@@ -199,7 +203,7 @@ const SubmitButtonText = styled.a`
 `
 
 const ProductsGrid = styled.div`
-  
+  /* margin: 10[px]; */
   `
 
 function Cart() {
