@@ -1,5 +1,3 @@
-// CategorySlider.js
-
 import React, { useEffect, useState } from 'react';
 import './CategorySlider.css';
 
@@ -78,10 +76,6 @@ const modelOptions = [
   'LG',
   'Motorola',
   'Sony',
-  'Huawei',
-  'Realme',
-  'Honor',
-  'Artel',
   'Huawei',
   'Realme',
   'Honor',
