@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./CategorySlider.css";
 
-function makeSliderDraggable() {
+function makeSliderDraggable({ onSelectModel }) {
 	const tabsBox = document.querySelector(".tabs-box");
 	const arrowIcons = document.querySelectorAll(".icon");
 	const allTabs = document.querySelectorAll(".tab");
@@ -12,7 +12,7 @@ function makeSliderDraggable() {
 	const handleIcons = () => {
 		let scrollVal = Math.round(tabsBox.scrollLeft);
 		let maxScrollableWidth = tabsBox.scrollWidth - tabsBox.clientWidth;
-		arrowIcons[0].style.display = scrollVal > 15 ? "flex" : "none";
+		arrowIcons[0].style.display = scrollVal > 0 ? "flex" : "none";
 		arrowIcons[1].style.display =
 			maxScrollableWidth > scrollVal ? "flex" : "none";
 	};
@@ -79,7 +79,7 @@ const modelOptions = [
 	"Xiaomi",
 	"Samsung",
 	"OnePlus",
-	"LG",
+	"Google",
 	"Motorola",
 	"Sony",
 	"Huawei",
@@ -88,16 +88,15 @@ const modelOptions = [
 	"Artel",
 ];
 
-function CategorySlider() {
+function CategorySlider({ selectedModel, onSelectModel }) {
 	const [isDragging, setIsDragging] = useState(false);
 
 	useEffect(() => {
-		makeSliderDraggable();
-	}, []);
+		makeSliderDraggable({ onSelectModel });
+	}, [onSelectModel]);
 
 	const handleModelClick = (option) => {
-		// Define your logic for handling model click
-		console.log(`Clicked on ${option}`);
+		onSelectModel(option);
 	};
 
 	return (
@@ -121,7 +120,7 @@ function CategorySlider() {
 
 			<ul className="tabs-box">
 				<li className="tab active" onClick={() => handleModelClick("All")}>
-					All
+					Все
 				</li>
 				{modelOptions.map((option) => (
 					<li

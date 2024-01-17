@@ -1,13 +1,9 @@
-import React from 'react'
-import Center from '../Layout/Center'
-import CategorySlider from '../HomePage/Slider/CategorySlider'
+import React from "react";
+import Center from "../Layout/Center";
+import CategorySlider from "../HomePage/Slider/CategorySlider";
 
 function Liked() {
-  return (
-    <Center>
-      <CategorySlider />
-    </Center>
-  )
+	return <Center></Center>;
 }
 
-export default Liked
+export default Liked;
