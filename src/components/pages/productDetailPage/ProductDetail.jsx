@@ -1,9 +1,176 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import Center from "../Layout/Center";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import phoneDatabase from "../../../assets/products";
-import CartWithQuantity from "../HomePage/CartWithQuantity";
+import { useDispatch, useSelector } from "react-redux";
+import CartContext from "../../contexts/CartContext";
+
+function ProductDetail() {
+	const [index, setIndex] = useState(0);
+	const { id } = useParams();
+	const productId = parseInt(id);
+	const dispatch = useDispatch();
+	const cartContext = useContext(CartContext);
+	const navigate = useNavigate();
+	let [loading, setLoading] = useState(false);
+
+	// const product = phoneDatabase.find((item) => item.id === productId);
+	const [product, setProduct] = useState({});
+
+	// useEffect(() => {
+	// 	setLoading(true);
+
+	// const apiKey =
+	// 	"8c67d307d31451abca1ac27d30c00f7d478ea298f332974b4bc3ab15bd6c7fe386081b9d726b4f4e85febb89fd949bc2334b40c5607c2dd57fe7f6ec3efd2177";
+	// 	const apiUrl = `https://xmax.onrender.com/products/${id}`;
+
+	// 	// Make your fetch request here
+	// 	fetch(apiUrl, {
+	// 		headers: {
+	// 			"api-key": apiKey,
+	// 			"Content-Type": "application/json",
+	// 		},
+	// 	})
+	// 		.then((response) => response.json())
+	// 		.then((data) => {
+	// 			// console.log("product with id: ", data.product.images[1].filename);
+	// 			setProduct(data.product);
+	// 			setLoading(false);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error("Error fetching data:", error);
+	// 			setLoading(false);
+	// 		});
+	// }, []);
+
+	const apiKey =
+		"8c67d307d31451abca1ac27d30c00f7d478ea298f332974b4bc3ab15bd6c7fe386081b9d726b4f4e85febb89fd949bc2334b40c5607c2dd57fe7f6ec3efd2177";
+	const fullUrl = "https://xmax.onrender.com/products/1/";
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(fullUrl, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						"api-key": apiKey,
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error(`Ошибка: ${response.status}`);
+				}
+
+				const data = await response.json();
+
+				if (data) {
+					setProduct(data.product);
+					// console.log(data.product);
+				} else {
+					console.error("Ошибка: Некорректные данные получены от сервера.");
+				}
+			} catch (error) {
+				console.error("Ошибка при запросе данных:", error.message);
+			}
+		};
+
+		fetchData();
+	}, [fullUrl]);
+
+	const handleTab = (index) => {
+		setIndex(index);
+	};
+
+	const handleAddToCard = (product) => {
+		dispatch(addToCart(product));
+		dispatch(getTotals());
+	};
+
+	const handleNavigate = (product) => {
+		cartContext.increaseCartQuantity(product);
+		navigate("/checkout");
+	};
+
+	console.log("from server: ", product);
+
+	// Render product details
+	return (
+		<Center>
+			<ProductContainer>
+				{product ? (
+					<InnerContainer>
+						{
+							<ImageContainer>
+								{
+									<BigImgContainer>
+										{product && product.images && product.images[0] && (
+											<BigImg
+												src={product.images[0].filename}
+												alt={product.name}
+											/>
+										)}
+									</BigImgContainer>
+								}
+								{
+									// <SubImgContainer>
+									// 	{product.images.map((img, index) => (
+									// 		<SubImgWrapper>
+									// 			<SubImg
+									// 				src={img.filename}
+									// 				alt="/"
+									// 				key={img.id}
+									// 				onClick={() => handleTab(img.id)}
+									// 				// style={{
+									// 				// 	opacity: img.id === index ? 1 : 0.7,
+									// 				// 	border: img.id === index ? "1px solid orange" : "",
+									// 				// }}
+									// 			/>
+									// 		</SubImgWrapper>
+									// 	))}
+									// </SubImgContainer>
+								}
+							</ImageContainer>
+						}
+						<DetailContainer>
+							<StyledTitle>
+								<h2>{product.name}</h2>
+								<LineSeparator />
+								<h4>
+									<span>Narxi: </span>
+									{Math.round(product.price)
+										.toLocaleString("en-US")
+										.replace(/,/g, " ")}{" "}
+									сум
+								</h4>
+								<LineSeparator />
+								<p>
+									<b>Mahsulot haqida qisqacha:</b>
+									<br></br>
+									{product.description}
+								</p>
+							</StyledTitle>
+
+							<div style={{ display: "flex", justifyContent: "space-between" }}>
+								<StyledButton onClick={() => handleNavigate(product)}>
+									Купить!
+								</StyledButton>
+								<StyledButton
+									onClick={() => cartContext.increaseCartQuantity(product)}
+								>
+									Добавить в корзину
+								</StyledButton>
+							</div>
+						</DetailContainer>
+					</InnerContainer>
+				) : (
+					<p>Product not found</p>
+				)}
+			</ProductContainer>
+		</Center>
+	);
+}
 
 const ProductContainer = styled.div`
 	margin: 0 auto;
@@ -110,7 +277,6 @@ const BigImg = styled.img`
 	max-width: 300px;
 	display: block;
 	background-color: #fff;
-	border-radius: 10px;
 	transition: transform 0.3s ease-in-out;
 
 	&:hover {
@@ -127,21 +293,27 @@ const BigImg = styled.img`
 const SubImgContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: start;
 	align-items: start;
 	margin-left: 10px;
+	/* width: 93px; */
 	gap: 0.5rem;
+	overflow-x: auto;
 
 	@media screen and (max-width: 600px) {
 		margin: 0;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: start;
 	}
+`;
+
+const SubImgWrapper = styled.div`
+	/* max-width: 93px; */
 `;
 
 const SubImg = styled.img`
 	width: 100%;
-	max-width: 93px;
+	max-width: 85px;
 	background-color: #fff;
 	padding: 5px;
 	display: block;
@@ -187,74 +359,5 @@ const StyledTitle = styled.div`
 	padding: 0px 20px;
 	border-radius: 10px;
 `;
-
-function ProductDetail() {
-	const [index, setIndex] = useState(0);
-	const { id } = useParams();
-	const productId = parseInt(id);
-
-	const product = phoneDatabase.find((item) => item.id === productId);
-
-	const handleTab = (index) => {
-		setIndex(index);
-	};
-
-	// Render product details
-	return (
-		<Center>
-			<ProductContainer>
-				{product ? (
-					<InnerContainer>
-						<ImageContainer>
-							<BigImgContainer>
-								<BigImg src={product.imgUrl[index]} alt={product.title} />
-							</BigImgContainer>
-							<SubImgContainer>
-								{product.imgUrl.map((img, i) => (
-									<SubImg
-										src={img}
-										alt="/"
-										key={i}
-										onClick={() => handleTab(i)}
-										style={{
-											opacity: i === index ? 1 : 0.7,
-											border: i === index ? "1px solid orange" : "",
-										}}
-									/>
-								))}
-							</SubImgContainer>
-						</ImageContainer>
-						<DetailContainer>
-							<StyledTitle>
-								<h2>{product.title}</h2>
-								<LineSeparator />
-								<h4>
-									<span>Narxi: </span>
-									{Math.round(product.price)
-										.toLocaleString("en-US")
-										.replace(/,/g, " ")}{" "}
-									сум
-								</h4>
-								<LineSeparator />
-								<p>
-									<b>Mahsulot haqida qisqacha:</b>
-									<br></br>
-									{product.description}
-								</p>
-							</StyledTitle>
-
-							<div style={{ display: "flex", justifyContent: "space-between" }}>
-								<StyledButton>Купить!</StyledButton>
-								<StyledButton>Добавить в корзину</StyledButton>
-							</div>
-						</DetailContainer>
-					</InnerContainer>
-				) : (
-					<p>Product not found</p>
-				)}
-			</ProductContainer>
-		</Center>
-	);
-}
 
 export default ProductDetail;

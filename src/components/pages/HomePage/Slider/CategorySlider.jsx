@@ -74,21 +74,22 @@ function makeSliderDraggable({ onSelectModel }) {
 	tabsBox.addEventListener("touchend", handleTouchEnd);
 }
 
-const modelOptions = [
-	"Apple",
-	"Xiaomi",
-	"Samsung",
-	"OnePlus",
-	"Google",
-	"Motorola",
-	"Sony",
-	"Huawei",
-	"Realme",
-	"Honor",
-	"Artel",
-];
+// const modelOptions = [
+// 	"Apple",
+// 	"Xiaomi",
+// 	"Samsung",
+// 	"OnePlus",
+// 	"Google",
+// 	"Motorola",
+// 	"Sony",
+// 	"Huawei",
+// 	"Realme",
+// 	"Honor",
+// 	"Artel",
+// ];
 
-function CategorySlider({ selectedModel, onSelectModel }) {
+function CategorySlider({ selectedModel, onSelectModel, phoneCategory }) {
+	const modelOptions = phoneCategory;
 	const [isDragging, setIsDragging] = useState(false);
 
 	useEffect(() => {
@@ -125,10 +126,10 @@ function CategorySlider({ selectedModel, onSelectModel }) {
 				{modelOptions.map((option) => (
 					<li
 						className="tab"
-						key={option}
-						onClick={() => handleModelClick(option)}
+						key={option.id}
+						onClick={() => handleModelClick(option.id)}
 					>
-						{option}
+						{option.name}
 					</li>
 				))}
 			</ul>

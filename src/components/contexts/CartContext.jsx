@@ -1,35 +1,41 @@
-import {createContext, useEffect, useState} from "react";
+import { createContext, useEffect, useState } from "react";
+import { API_KEY, API_URL } from "../pages/utilities/Constants";
 
 const CartContext = createContext({});
 
-export function CartContextProvider({children}) {
-  const [cartProducts, setCartProducts] = useState(JSON.parse(localStorage.getItem('cart')) || []);
+export function CartContextProvider({ children }) {
+	const [cartItems, setCartItems] = useState([]);
 
-  useEffect(() => {
-    if(cartProducts?.length > 0){
-      localStorage.setItem('cart', JSON.stringify(cartProducts))
-    }
-  }, [cartProducts])
+	useEffect(() => {
+		localStorage.setItem("cartItems", JSON.stringify(cartItems));
+	}, [cartItems]);
 
-  function addProduct(productId){
-    setCartProducts(prev => [...prev, productId])
-  }
+	function getItemQuantity(product) {
+		return cartItems?.find((item) => item.id === product.id)?.quantity || 0;
+	}
 
-  function removeProduct(productId) {
-    const indexToRemove = cartProducts.findIndex((id) => id === productId);
-    if (indexToRemove !== -1) {
-      const updatedCart = [...cartProducts];
-      updatedCart.splice(indexToRemove, 1);
-      setCartProducts(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-    }
-  }
+	const cartTotalQuantity = cartItems
+		? cartItems.reduce((quantity, item) => item.quantity + quantity, 0)
+		: 0;
 
-  return (
-  <CartContext.Provider value={{cartProducts, setCartProducts, addProduct, removeProduct}}>
-    {children}
-  </CartContext.Provider>
-);
+	function increaseCartQuantity(product) {
+		console.log(cartItems);
+	}
+
+	function decreaseCartQuantity(product) {}
+
+	return (
+		<CartContext.Provider
+			value={{
+				getItemQuantity,
+				cartItems,
+				setCartItems,
+				cartTotalQuantity,
+			}}
+		>
+			{children}
+		</CartContext.Provider>
+	);
 }
 
 export default CartContext;

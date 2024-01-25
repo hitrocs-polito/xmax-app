@@ -6,6 +6,8 @@ import { HashLoader } from "react-spinners";
 import { useState } from "react";
 
 function Home() {
+	console.log("Home page is working!");
+
 	return (
 		<>
 			<Banner />

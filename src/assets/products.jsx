@@ -10,6 +10,7 @@ const phoneDatabase = [
 		RAM: "6GB",
 		memory: "128GB",
 		imgUrl: [
+			"https://lh7-us.googleusercontent.com/Zhb4tY4IH-4DiYwPjtzERzdHhmeh0S4kjhC5m_ybufcOlQplNqIP_NEyq2wMQ-DDoaBT3s0KbrgxUgs2YNY0j2yI5p2w6XpLXeadXixetFmB8j0qmHEKBhqVZ0I8fPs6HEoz6x5-4jrhFloozXfTC98",
 			"https://olcha.uz/image/700x700/products/2021-09-24/apple-iphone-13-pro-256gb-25274-0.jpeg",
 		],
 		model: "Apple",
@@ -30,6 +31,7 @@ const phoneDatabase = [
 			"https://olcha.uz/image/700x700/products/2020-12-03/apple-iphone-se-2020-128gb-black-19794-0.jpeg",
 		],
 		model: "Apple",
+		amount: 5,
 	},
 	{
 		id: 3,
@@ -41,6 +43,7 @@ const phoneDatabase = [
 		RAM: "6GB",
 		memory: "128GB",
 		imgUrl: [
+			"https://www.123comparer.fr/photoProd/zoom/3505/iphone-14-128-go-lumiere-stellaire-333512167.jpg",
 			"https://olcha.uz/image/700x700/products/2019-10-14/apple-iphone-11-128gb-yellow-10471-0.jpeg",
 		],
 		model: "Apple",
