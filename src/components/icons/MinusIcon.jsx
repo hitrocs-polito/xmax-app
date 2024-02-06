@@ -1,13 +1,23 @@
-import React from 'react'
+import React from "react";
 
 function MinusIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="orange" width={'2rem'} className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-    </svg>
-
-
-  )
+	return (
+		<svg
+			style={{ cursor: "pointer", paddingLeft: "3px" }}
+			xmlns="http://www.w3.org/2000/svg"
+			width="14"
+			height="14"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="black"
+			strokeWidth="2.5"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			class="lucide lucide-minus"
+		>
+			<path d="M5 12h14" />
+		</svg>
+	);
 }
 
-export default MinusIcon
+export default MinusIcon;

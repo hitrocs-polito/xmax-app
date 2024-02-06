@@ -7,7 +7,7 @@ import ProductCard from "../HomePage/ProductCard";
 import LikedContext from "../../contexts/LikedContext";
 
 function Liked() {
-	const likedContext = useContext(LikedContext);
+	const { likedItems, setLikedItems } = useContext(LikedContext);
 
 	const removeFromLiked = (productId) => {
 		const updatedLikedProducts = likedProducts.filter(
@@ -17,12 +17,14 @@ function Liked() {
 		localStorage.setItem("likedProducts", JSON.stringify(updatedLikedProducts));
 	};
 
+	console.log("Liked items: ", likedItems);
+
 	return (
 		<Center>
 			<Title>Liked Products</Title>
 
 			<ProductsGrid>
-				{likedContext.likedItems.map((product) => (
+				{likedItems.map((product) => (
 					<ProductCard
 						key={product.id}
 						{...product}

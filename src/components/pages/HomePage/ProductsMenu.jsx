@@ -6,17 +6,27 @@ import phoneDatabase from "../../../assets/products";
 import CategorySlider from "./Slider/CategorySlider";
 import { PulseLoader } from "react-spinners";
 import { API_KEY, API_URL } from "../utilities/Constants";
+import Pagination from "../utilities/Pagination";
 
 function ProductsMenu() {
 	let [loading, setLoading] = useState(false);
 	const [selectedModel, setSelectedModel] = useState("All");
 	const [phoneDatabase, setPhoneDatabase] = useState([]);
 	const [phoneCategory, setPhoneCategory] = useState([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [phonesPerPage] = useState(10);
+
+	const indexOfLastPhone = currentPage * phonesPerPage;
+	const indexOfFirstPhone = indexOfLastPhone - phonesPerPage;
+	const currentPhones = phoneDatabase.slice(
+		indexOfFirstPhone,
+		indexOfLastPhone
+	);
 
 	useEffect(() => {
 		setLoading(true);
 
-		const apiUrl = `${API_URL}/home`;
+		const apiUrl = `${API_URL}/home/`;
 
 		fetch(apiUrl, {
 			headers: {
@@ -50,6 +60,11 @@ function ProductsMenu() {
 					(product) => product.category.id === selectedModel
 			  );
 
+	const paginate = (pageNumber) => {
+		console.log("pageNumber: ", pageNumber);
+		setCurrentPage(pageNumber);
+	};
+
 	return (
 		<Center>
 			{loading ? (
@@ -73,12 +88,17 @@ function ProductsMenu() {
 						phoneCategory={phoneCategory}
 					/>
 					<ProductsGrid>
-						{phoneDatabase.map((product) => (
+						{currentPhones.map((product) => (
 							<ProductCard key={product.id} {...product} />
 						))}
 					</ProductsGrid>
 				</div>
 			)}
+			<Pagination
+				phonesPerPage={phonesPerPage}
+				totalPhones={phoneDatabase.length}
+				paginate={paginate}
+			/>
 		</Center>
 	);
 }
@@ -90,31 +110,22 @@ const Title = styled.h2`
 
 const ProductsGrid = styled.div`
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	gap: 20px;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-gap: 20px;
 	font-family: "Montserrat";
-	margin-top: 20px;
 
-	@media (max-width: 1100px) {
-		grid-template-columns: 1fr 1fr 1fr;
-		gap: 10px;
-	}
+	@media screen and (max-width: 600px) {
+		grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
 
-	@media (max-width: 800px) {
-		grid-template-columns: 1fr 1fr;
-		gap: 10px;
-	}
-
-	@media (max-width: 600px) {
-		grid-template-columns: 1fr;
-		gap: 10px;
+		grid-gap: 10px;
 	}
 `;
+
 const LoaderContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100vh; /* Adjust this value as needed to center the loader vertically */
+	height: 50vh; /* Adjust this value as needed to center the loader vertically */
 `;
 
 export default ProductsMenu;

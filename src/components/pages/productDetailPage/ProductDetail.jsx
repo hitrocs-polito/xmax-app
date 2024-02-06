@@ -3,52 +3,29 @@ import styled from "styled-components";
 import Center from "../Layout/Center";
 import { useNavigate, useParams } from "react-router-dom";
 import phoneDatabase from "../../../assets/products";
-import { useDispatch, useSelector } from "react-redux";
+import { PulseLoader } from "react-spinners";
 import CartContext from "../../contexts/CartContext";
 
 function ProductDetail() {
 	const [index, setIndex] = useState(0);
 	const { id } = useParams();
 	const productId = parseInt(id);
-	const dispatch = useDispatch();
 	const cartContext = useContext(CartContext);
 	const navigate = useNavigate();
 	let [loading, setLoading] = useState(false);
+	const [product, setProduct] = useState({});
+	const [activeImage, setActiveImage] = useState("");
+
+	console.log("active image", activeImage);
 
 	// const product = phoneDatabase.find((item) => item.id === productId);
-	const [product, setProduct] = useState({});
-
-	// useEffect(() => {
-	// 	setLoading(true);
-
-	// const apiKey =
-	// 	"8c67d307d31451abca1ac27d30c00f7d478ea298f332974b4bc3ab15bd6c7fe386081b9d726b4f4e85febb89fd949bc2334b40c5607c2dd57fe7f6ec3efd2177";
-	// 	const apiUrl = `https://xmax.onrender.com/products/${id}`;
-
-	// 	// Make your fetch request here
-	// 	fetch(apiUrl, {
-	// 		headers: {
-	// 			"api-key": apiKey,
-	// 			"Content-Type": "application/json",
-	// 		},
-	// 	})
-	// 		.then((response) => response.json())
-	// 		.then((data) => {
-	// 			// console.log("product with id: ", data.product.images[1].filename);
-	// 			setProduct(data.product);
-	// 			setLoading(false);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error("Error fetching data:", error);
-	// 			setLoading(false);
-	// 		});
-	// }, []);
 
 	const apiKey =
 		"8c67d307d31451abca1ac27d30c00f7d478ea298f332974b4bc3ab15bd6c7fe386081b9d726b4f4e85febb89fd949bc2334b40c5607c2dd57fe7f6ec3efd2177";
-	const fullUrl = "https://xmax.onrender.com/products/1/";
+	const fullUrl = `https://xmax.onrender.com/products/${productId}/`;
 
 	useEffect(() => {
+		setLoading(true);
 		const fetchData = async () => {
 			try {
 				const response = await fetch(fullUrl, {
@@ -61,18 +38,21 @@ function ProductDetail() {
 
 				if (!response.ok) {
 					throw new Error(`Ошибка: ${response.status}`);
+					setLoading(false);
 				}
 
 				const data = await response.json();
 
 				if (data) {
 					setProduct(data.product);
+					setLoading(false);
 					// console.log(data.product);
 				} else {
 					console.error("Ошибка: Некорректные данные получены от сервера.");
 				}
 			} catch (error) {
 				console.error("Ошибка при запросе данных:", error.message);
+				setLoading(false);
 			}
 		};
 
@@ -96,159 +76,165 @@ function ProductDetail() {
 	console.log("from server: ", product);
 
 	// Render product details
+
 	return (
 		<Center>
 			<ProductContainer>
-				{product ? (
-					<InnerContainer>
-						{
-							<ImageContainer>
-								{
-									<BigImgContainer>
-										{product && product.images && product.images[0] && (
-											<BigImg
-												src={product.images[0].filename}
-												alt={product.name}
-											/>
-										)}
-									</BigImgContainer>
-								}
-								{
-									// <SubImgContainer>
-									// 	{product.images.map((img, index) => (
-									// 		<SubImgWrapper>
-									// 			<SubImg
-									// 				src={img.filename}
-									// 				alt="/"
-									// 				key={img.id}
-									// 				onClick={() => handleTab(img.id)}
-									// 				// style={{
-									// 				// 	opacity: img.id === index ? 1 : 0.7,
-									// 				// 	border: img.id === index ? "1px solid orange" : "",
-									// 				// }}
-									// 			/>
-									// 		</SubImgWrapper>
-									// 	))}
-									// </SubImgContainer>
-								}
-							</ImageContainer>
-						}
-						<DetailContainer>
-							<StyledTitle>
-								<h2>{product.name}</h2>
-								<LineSeparator />
-								<h4>
-									<span>Narxi: </span>
-									{Math.round(product.price)
-										.toLocaleString("en-US")
-										.replace(/,/g, " ")}{" "}
-									сум
-								</h4>
-								<LineSeparator />
-								<p>
-									<b>Mahsulot haqida qisqacha:</b>
-									<br></br>
-									{product.description}
-								</p>
-							</StyledTitle>
-
-							<div style={{ display: "flex", justifyContent: "space-between" }}>
-								<StyledButton onClick={() => handleNavigate(product)}>
-									Купить!
-								</StyledButton>
+				{loading ? (
+					<LoaderContainer>
+						<PulseLoader
+							color="#FFA542"
+							loading={loading}
+							margin={2}
+							size={25}
+						/>
+					</LoaderContainer>
+				) : (
+					<Outer>
+						<StyledButton style={{ width: "7rem" }}>
+							<a style={{ textDecoration: "none", color: "white" }} href="/">
+								Orqaga
+							</a>
+						</StyledButton>
+						<InnerContainer>
+							{
+								<ImageContainer>
+									{product && product.images && product.images[0] && (
+										<Image
+											src={product?.images?.[0]?.filename}
+											alt={product.name}
+										/>
+									)}
+									{
+										<ImageButtons>
+											{product?.images?.map((img, index) => (
+												<ImageButton>
+													<Image
+														src={img.filename}
+														alt="/"
+														key={img.id}
+														onClick={() => setActiveImage(img.filename)}
+														// style={{
+														// 	opacity: img.id === index ? 1 : 0.7,
+														// 	border: img.id === index ? "1px solid orange" : "",
+														// }}
+													/>
+												</ImageButton>
+											))}
+										</ImageButtons>
+									}
+								</ImageContainer>
+							}
+							<DetailContainer>
+								<StyledTitle>
+									<Title>{product.name}</Title>
+									<LineSeparator />
+									<Title2>
+										{Math.round(product.price)
+											.toLocaleString("en-US")
+											.replace(/,/g, " ")}{" "}
+										so'm
+									</Title2>
+									<p>
+										<b>Mahsulot haqida qisqacha:</b>
+										<br></br>
+										{product.description}
+									</p>
+								</StyledTitle>
 								<StyledButton
 									onClick={() => cartContext.increaseCartQuantity(product)}
 								>
-									Добавить в корзину
+									Savatga qo'shish
 								</StyledButton>
-							</div>
-						</DetailContainer>
-					</InnerContainer>
-				) : (
-					<p>Product not found</p>
+							</DetailContainer>
+						</InnerContainer>
+					</Outer>
 				)}
 			</ProductContainer>
 		</Center>
 	);
 }
 
-const ProductContainer = styled.div`
-	margin: 0 auto;
-	padding: 10px 0;
-	/* background-color: #fff; */
-	/* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-	border-radius: 8px;
+const Image = styled.img`
+	max-width: 100%;
+	padding: 5px;
+	max-height: 100%;
+`;
 
-	h2 {
-		margin: 1rem 0;
-		font-size: 2rem;
-	}
+const ImageButtons = styled.div`
+	display: flex;
+	gap: 10px;
+	flex-grow: 0;
+	margin-top: 10px;
+`;
 
-	h4 {
-		margin: 0;
-		font-size: 1.3rem;
-	}
+const ImageButton = styled.div`
+	border: 1px solid #eaeaea;
+	max-height: 60px;
+	max-width: 100px;
+	padding: 2px;
+	border-radius: 5px;
+	cursor: pointer;
+`;
 
-	p {
-		font-size: 16px;
-	}
+const Title = styled.h2`
+	font-size: 1.5rem;
+	font-weight: 500;
+	margin: 0;
+`;
+
+const Title2 = styled.h4`
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin: 10px 0;
+`;
+
+const Outer = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+`;
+
+const ProductContainer = styled.div``;
+const LoaderContainer = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 50vh; /* Adjust this value as needed to center the loader vertically */
 `;
 
 const LineSeparator = styled.div`
 	width: 100%;
-	height: 1px;
+	height: 2px;
 	background-color: lightgray;
-	margin: 5px 0;
+	margin: 10px 0;
 `;
 
 const InnerContainer = styled.div`
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 0.8fr 1.2fr;
+	grid-gap: 3rem;
 
-	@media screen and (max-width: 1024px) {
-		display: grid;
+	@media screen and (max-width: 786px) {
 		grid-template-columns: 1fr;
-		gap: 1rem;
-	}
-
-	@media screen and (max-width: 600px) {
-		width: 100%;
 	}
 `;
 
 const ImageContainer = styled.div`
 	display: flex;
-	justify-content: start;
-	max-width: 500px;
-	height: 450px;
-	/* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+	flex-direction: column;
+	width: 100%;
+	padding: 0.5rem;
 	border-radius: 8px;
-
-	@media screen and (max-width: 1000px) {
-	}
-
-	@media screen and (max-width: 600px) {
-		width: 600px;
-		width: 100%;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
+	background-color: #fff;
 `;
 
 const DetailContainer = styled.div`
-	margin-left: 5rem;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	max-width: 500px;
-	height: 450px;
-	border-radius: 8px;
+	max-width: 100%;
 
-	@media screen and (max-width: 1024px) {
-		margin-left: 0;
-	}
-
-	@media screen and (max-width: 600px) {
+	@media screen and (max-width: 786px) {
 		width: auto;
 	}
 `;
@@ -262,13 +248,8 @@ const BigImgContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 
-	@media screen and (max-width: 1000px) {
-	}
-
-	@media screen and (max-width: 600px) {
-		width: 430px;
+	@media screen and (max-width: 786px) {
 		width: auto;
-		/* height: auto; */
 	}
 `;
 
@@ -282,56 +263,39 @@ const BigImg = styled.img`
 	&:hover {
 		transform: scale(1.05);
 	}
-
-	@media screen and (max-width: 1000px) {
-	}
-
-	@media screen and (max-width: 600px) {
-	}
 `;
 
 const SubImgContainer = styled.div`
 	display: flex;
-	flex-direction: column;
 	justify-content: start;
 	align-items: start;
-	margin-left: 10px;
-	/* width: 93px; */
-	gap: 0.5rem;
-	overflow-x: auto;
-
-	@media screen and (max-width: 600px) {
-		margin: 0;
-		flex-direction: row;
-		justify-content: start;
-	}
+	width: 300px;
+	gap: 0.1rem;
 `;
 
 const SubImgWrapper = styled.div`
-	/* max-width: 93px; */
+	/* width: 110px;
+	height: 200px;
+	margin-top: 10px; */
 `;
 
 const SubImg = styled.img`
 	width: 100%;
-	max-width: 85px;
+	max-width: 300px;
+	display: block;
 	background-color: #fff;
 	padding: 5px;
-	display: block;
 	object-fit: cover;
 	border: 1px solid #ddd;
-	margin-right: 5px;
 	opacity: "0.7";
 	border-radius: 5px;
 	cursor: pointer;
 	transition: 0.3ms;
-
-	@media screen and (max-width: 600px) {
-		width: 80px;
-	}
+	height: 100px;
 `;
 
 const StyledButton = styled.button`
-	width: 230px;
+	width: 10rem;
 	height: 45px;
 	flex-shrink: 0;
 	border: 0;
@@ -348,16 +312,13 @@ const StyledButton = styled.button`
 
 	@media screen and (max-width: 600px) {
 		width: 180px;
-		margin-top: 1rem;
 	}
 `;
 
 const StyledTitle = styled.div`
 	max-width: 700px;
-	height: 400px;
-	background-color: #fff;
-	padding: 0px 20px;
-	border-radius: 10px;
+	background-color: #eaeaea;
+	/* border-radius: 10px; */
 `;
 
 export default ProductDetail;

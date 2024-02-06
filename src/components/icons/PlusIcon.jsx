@@ -1,12 +1,24 @@
-import React from 'react'
+import React from "react";
 
 function PlusIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="orange" width={'2rem'} className="w-6 h-6">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-  </svg>
-  
-  )
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			style={{ cursor: "pointer" }}
+			width="14"
+			height="14"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="black"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			class="lucide lucide-plus"
+		>
+			<path d="M5 12h14" />
+			<path d="M12 5v14" />
+		</svg>
+	);
 }
 
-export default PlusIcon
+export default PlusIcon;

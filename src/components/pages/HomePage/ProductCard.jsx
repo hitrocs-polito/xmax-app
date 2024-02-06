@@ -2,56 +2,87 @@ import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import CartContext, { CartContextProvider } from "../../contexts/CartContext";
+import CartContext from "../../contexts/CartContext";
 import LikedContext from "../../contexts/LikedContext";
 import { Link } from "react-router-dom";
+import { decreaseFromCartDatabase } from "../../apis/decreaseFromCart";
+import PlusIcon from "../../icons/PlusIcon";
+import MinusIcon from "../../icons/MinusIcon";
+import Liked from "../LikedPage/Liked";
+import { API_KEY, API_URL } from "../utilities/Constants";
+import { addToCartDatabase } from "../../apis/addToCartDatabase";
 
 function ProductCard(product) {
-	const likedContext = useContext(LikedContext);
-	const cartContext = useContext(CartContext);
-	const cartQuantity = cartContext.getItemQuantity(product);
+	const { cartItems, setCartItems } = useContext(CartContext);
 
-	const [quantity, setQuantity] = useState(0);
-	const { id, name, price, images } = product;
-	// const { addProduct, removeProduct } = useContext(CartContext);
+	const { likedItems, setLikedItems } = useContext(LikedContext);
+	// const cartQuantity = parseInt(getItemQuantity(product));
+
+	const { id, name, price, images } = product.item ? product.item : product;
 	const [isHeartActive, setIsHeartActive] = useState(false); // State for heart active state
 
-	const likedProducts = JSON.parse(localStorage.getItem("likedProducts"));
+	const [quantity, setQuantity] = useState(0);
 
-	const handleHeartClick = () => {
+	const isLiked = (item) => {
+		console.log("liked items: ", likedItems);
+		return likedItems.some((likedItem) => likedItem.item_id === item.id);
+	};
+
+	useEffect(() => {
+		console.log("Cart items: ", cartItems);
+		cartItems.map((item) => {
+			const product_id = item.item_id ? item.item_id : item.id;
+			if (product_id === product.id) {
+				setQuantity(item.quantity);
+			}
+		});
+		// const foundItem = cartItems.find(
+		// 	(item) => (item.item_id ? item.item_id : item.id) === product.id
+		// );
+		// if (foundItem) {
+		// 	setQuantity(foundItem.quantity);
+		// }
+	}, []);
+
+	console.log("quantity: ", quantity);
+
+	const handleHeartClick = (item) => {
 		const newIsHeartActive = !isHeartActive;
 		setIsHeartActive(newIsHeartActive);
 
 		if (newIsHeartActive) {
-			likedContext.addToLiked(product);
-		} else {
-			likedContext.removeFromLiked(product);
-		}
-	};
-
-	const handleIncreaseCartQuantity = (item) => {
-		cartContext.setCartItems((currItems) => {
-			if (!currItems.some((item) => item.id === product.id)) {
-				// Product is not in the cart, add it as a new product
-				return [...currItems, { ...product, quantity: 1 }];
+			// Function to add an item to the liked list
+			console.log(likedItems);
+			if (likedItems.some((liked) => liked.item_id === item.id)) {
+				// If it exists, remove it
+				setLikedItems((prevLikedItems) =>
+					prevLikedItems.filter((liked) => liked.item_id !== item.id)
+				);
 			} else {
-				// Product is already in the cart, update the quantity
-				return currItems.map((item) => {
-					if (item.id === product.id) {
-						return { ...item, quantity: item.quantity + 1 };
-					}
-				});
+				// If it doesn't exist, add it
+				setLikedItems((prevLikedItems) => [...prevLikedItems, item]);
 			}
-		});
+			// Update localStorage after the change
+			// localStorage.setItem("likedItems", JSON.stringify(likedItems));
+		} else {
+			if (Array.isArray(likedItems)) {
+				setLikedItems((prevLikedItems) =>
+					prevLikedItems.filter((likedItem) => likedItem.item_id !== item.id)
+				);
+			}
+		}
 
-		const fullUrl = `${API_URL}/cart/add_to_cart/${product.id}/`;
-
+		const fullUrl = `${API_URL}/wishlist/wishlist_toggle/`;
+		const requestBody = {
+			item_id: item.id,
+		};
 		fetch(fullUrl, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				"api-key": API_KEY, // Assuming API key authentication
 			},
+			body: JSON.stringify(requestBody),
 		})
 			.then((response) => {
 				if (!response.ok) {
@@ -60,60 +91,82 @@ function ProductCard(product) {
 				return response.json();
 			})
 			.then((responseData) => {
-				console.log("Data added to the db: ", responseData);
+				console.log("Product added to wishlist:", responseData);
+				setLikedItems(responseData);
 				// Handle successful response, e.g., display a success message
 			})
 			.catch((error) => {
 				// Handle errors gracefully, e.g., display an error message
-				console.error("Error adding product to cart:", error);
+				console.error("Error adding product to wishlist:", error);
 			});
 	};
 
-	const handleDecreaseCartQuantity = (item) => {
-		cartContext.setCartItems((currItems) => {
-			if (currItems.find((item) => item.id === product.id)?.quantity == 1) {
-				return currItems.filter((item) => item.id !== product.id);
+	const handleIncreaseCartQuantity = (item) => {
+		setQuantity(quantity + 1);
+		setCartItems((currItems) => {
+			if (!currItems.some((product) => item.id === product.id)) {
+				// Product is not in the cart, add it as a new product
+				return [...currItems, { ...item, quantity: 1 }];
 			} else {
-				return currItems.map((item) => {
-					if (item.id === product.id) {
-						return { ...item, quantity: item.quantity - 1 };
-					} else return item;
+				// Product is already in the cart, update the quantity
+				return currItems.map((product) => {
+					if (product.id === item.id) {
+						return { ...product, quantity: product.quantity + 1 };
+					}
 				});
 			}
 		});
 
-		fetch(`${API_URL}/cart/remove_from_cart/${product.id}/`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"api-key": API_KEY, // Assuming API key authentication
-			},
-		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`API request failed with status ${response.status}`);
-				}
-				return response.json();
-			})
-			.then((responseData) => {
-				console.log("Data decreased product qty from db: ", responseData);
-				// Handle successful response, e.g., display a success message
-			})
-			.catch((error) => {
-				// Handle errors gracefully, e.g., display an error message
-				console.error("Error decreasing product qty in cart:", error);
-			});
+		console.log("cart items after increasing: ", cartItems);
+
+		addToCartDatabase(item);
 	};
 
+	// function getItemQuantity(product) {
+	// console.log(
+	// 	"response of getItemQty: ",
+	// 	cartItems?.find((item) => item?.item_id === product.id)?.quantity || 0
+	// );
+
+	// return cartItems.map((item) => {
+	// 	item.item_id === product.id ? item.quantity : 0;
+	// });
+
+	// const foundItem = cartItems.find((item) => item.item_id === product.id);
+
+	// return foundItem ? foundItem.quantity : 0;
+
+	// return (
+	// 	cartItems?.find((item) => item?.item_id === product.id)?.quantity || 0
+	// );
+	// }
+
+	const handleDecreaseCartQuantity = (item) => {
+		setCartItems((currItems) => {
+			if (currItems.find((product) => item.id === product.id)?.quantity === 1) {
+				return currItems.filter((product) => item.id !== product.id);
+			} else {
+				return currItems.map((product) => {
+					if (product.id === item.id) {
+						return { ...product, quantity: product.quantity - 1 };
+					} else return product;
+				});
+			}
+		});
+
+		decreaseFromCartDatabase(item);
+	};
+	const numLines = name.split(/\r\n|\r|\n/).length;
 	return (
 		<Card>
 			<WhiteBox>
 				<StyledHeart
 					size="2x"
 					icon={faHeart} // Use the heart icon from Font Awesome
-					className={likedContext.isLiked(product) ? "active" : "noactive"}
+					className={isLiked(product) ? "active" : "noactive"}
 					onClick={() => handleHeartClick(product)}
 				/>
+
 				<StyledLink to={`/products/${id}`}>
 					{product && product.images && product.images[0] && (
 						<Image src={product.images[0].filename} alt="product-image"></Image>
@@ -123,52 +176,71 @@ function ProductCard(product) {
 			<DescStyle>
 				<StyledLink to={`/products/${id}`}>
 					<Title>{name}</Title>
+					{/* {name.length <= 30 && <Price>{price}</Price>} */}
 				</StyledLink>
 				<PriceRow>
 					<Price>
-						{Math.round(price).toLocaleString("en-US").replace(/,/g, " ")} сум
+						{Math.round(price).toLocaleString("en-US").replace(/,/g, " ")} so'm
 					</Price>
-					<CartContainer>
-						{cartQuantity === 0 ? (
+				</PriceRow>
+				<CartContainer>
+					{quantity === 0 ? (
+						<CartStyle onClick={() => handleIncreaseCartQuantity(product)}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								onClick={() => handleIncreaseCartQuantity(product)}
-								fill="none"
-								viewBox="0 0 24 24"
-								strokeWidth={1.5}
-								stroke="orange"
-								width={"2rem"}
-								className="w-6 h-6"
+								width="21"
+								height="21"
+								fill="#010101"
+								viewBox="0 0 256 256"
+								strokeWidth="2"
 							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-								/>
+								<path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path>
 							</svg>
-						) : (
-							<QuantityControl>
-								<QuantityButton
-									onClick={() => handleDecreaseCartQuantity(product)}
-								>
-									<MinusIcon />
-								</QuantityButton>
-								<QuantityStyle>
-									{cartContext.getItemQuantity(product)}
-								</QuantityStyle>
-								<QuantityButton
-									onClick={() => handleIncreaseCartQuantity(product)}
-								>
-									<PlusIcon />
-								</QuantityButton>
-							</QuantityControl>
-						)}
-					</CartContainer>
-				</PriceRow>
+							<CartText>Savatga qo'shish</CartText>
+						</CartStyle>
+					) : (
+						<QuantityControl>
+							<QuantityButton
+								onClick={() => handleDecreaseCartQuantity(product)}
+							>
+								<MinusIcon />
+							</QuantityButton>
+							<QuantityStyle>{quantity}</QuantityStyle>
+							<QuantityButton
+								onClick={() => handleIncreaseCartQuantity(product)}
+							>
+								<PlusIcon />
+							</QuantityButton>
+						</QuantityControl>
+					)}
+				</CartContainer>
 			</DescStyle>
 		</Card>
 	);
 }
+
+const CartText = styled.span`
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 1rem;
+
+	@media screen and (max-width: 600px) {
+		font-size: 0.9rem;
+	}
+	@media screen and (max-width: 400px) {
+		font-size: 0.8rem;
+	}
+`;
+
+const CartStyle = styled.div`
+	width: 100%;
+	border: 2px solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	height: 35px;
+`;
 
 const StyledHeart = styled(FontAwesomeIcon)`
 	position: absolute;
@@ -177,7 +249,7 @@ const StyledHeart = styled(FontAwesomeIcon)`
 	/* color: #ccc; */
 	cursor: pointer;
 	user-select: none;
-	width: 2rem;
+	width: 1.5rem;
 	z-index: 4;
 
 	&:hover,
@@ -193,22 +265,14 @@ const StyledHeart = styled(FontAwesomeIcon)`
 
 const Card = styled.div`
 	position: relative;
-	border-radius: 15px;
+	border-radius: 10px;
 	transition: box-shadow 0.3s ease-in-out;
 	display: flex;
 	flex-direction: column;
 	height: max-content;
-
-	img {
-		/* max-width: 100%; */
-		max-height: 100%;
-	}
-
+	max-width: 300px;
 	&:hover {
-		-webkit-box-shadow: 0px 3px 5px -3px rgba(0, 0, 0, 0.75);
-		-moz-box-shadow: 0px 3px 5px -3px rgba(0, 0, 0, 0.75);
-		box-shadow: 0px 3px 5px -3px rgba(0, 0, 0, 0.75);
-		transition: box-shadow 0.3s ease-in-out;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add slight shadow on hover */
 	}
 
 	@media (max-width: 480px) {
@@ -227,6 +291,7 @@ const Image = styled.img`
 	z-index: 0;
 	width: 100%;
 	height: 100%;
+	max-height: 200px;
 	transition: transform 0.3s ease-in-out;
 
 	&:hover {
@@ -237,42 +302,30 @@ const Image = styled.img`
 const WhiteBox = styled.div`
 	background-color: white;
 	padding: 20px;
-	height: 280px;
-	width: auto;
+	height: 250px;
+	max-height: 250px;
+	max-width: 350px;
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	gap: 15px;
-	border-radius: 15px;
-
-	img {
-		max-width: 300px;
-		max-height: 400px;
-	}
-
-	@media (max-width: 1100px) {
-		height: 250px;
-	}
-
-	@media (max-width: 800px) {
-		height: 250px;
-	}
-
-	@media (max-width: 600px) {
-		height: 300px;
-	}
+	gap: 20px;
+	border-radius: 10px;
+	transition: box-shadow 0.3s ease; /* Add transition for smooth effect */
 `;
 
 const Title = styled.h2`
-	font-weight: normal;
+	font-weight: 500;
 	font-size: 1rem;
-	margin: 0;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2; /* Limit to 2 lines */
+	overflow: hidden;
+	text-overflow: ellipsis;
 `;
 
 const DescStyle = styled.div`
-	margin-top: 10px;
 	padding: 10px;
 `;
 
@@ -282,12 +335,12 @@ const PriceRow = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-bottom: 20px;
 `;
 
 const Price = styled.div`
-	font-size: 1rem;
-	font-weight: bold;
+	font-size: 0.9rem;
+	font-weight: 500;
 `;
 
 const StyledLink = styled(Link)`
@@ -295,35 +348,35 @@ const StyledLink = styled(Link)`
 	color: black;
 `;
 
-import PlusIcon from "../../icons/PlusIcon";
-import MinusIcon from "../../icons/MinusIcon";
-import Liked from "../LikedPage/Liked";
-import { API_KEY, API_URL } from "../utilities/Constants";
-
 const CartContainer = styled.div`
 	display: flex;
 	align-items: center;
 	cursor: pointer;
-	position: absolute;
-	right: 0;
 	user-select: none;
 `;
 
 const QuantityControl = styled.div`
+	border: 2px solid black;
+	width: 100%;
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
+	align-items: center;
+	border-radius: 5px;
+	height: 35px;
 `;
 
 const QuantityButton = styled.button`
-	background-color: #eaeaea;
 	border: none;
-	margin: 0 2px;
+	border-radius: 5px;
 	cursor: pointer;
+	height: 100%;
+	overflow: hidden;
+	background-color: #eaeaea;
 `;
 
 const QuantityStyle = styled.div`
-	width: 1rem;
+	width: 1.2rem;
+	font-weight: 600;
 	text-align: center;
 `;
 

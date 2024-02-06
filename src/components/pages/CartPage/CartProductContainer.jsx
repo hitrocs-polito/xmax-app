@@ -7,72 +7,59 @@ import DeleteIcon from "../../icons/DeleteIcon";
 import { Link } from "react-router-dom";
 import CartContext from "../../contexts/CartContext";
 import { API_KEY, API_URL } from "../utilities/Constants";
+import { addToCartDatabase } from "../../apis/ApiRequests";
 
 function CartProductContainer(item) {
 	const { setCartItems, cartItems } = useContext(CartContext);
-
-	const { images, name, price, id } = item?.item || {};
+	const { images, name, price, id } = item.item ? item.item : item;
+	// item = item.item ? item.item : item;
 	const intPrice = parseInt(price);
 
 	const handleIncreaseCartQuantity = (item) => {
 		setCartItems((currItems) => {
 			if (!currItems.some((product) => item.id === product.id)) {
 				// Product is not in the cart, add it as a new product
-				return [...currItems, { ...product, quantity: 1 }];
+				return [...currItems, { ...item, quantity: 1 }];
 			} else {
 				// Product is already in the cart, update the quantity
-				return currItems.map((item) => {
-					if (item.id === product.id) {
-						return { ...item, quantity: item.quantity + 1 };
+				return currItems.map((product) => {
+					if (product.id === item.id) {
+						return { ...product, quantity: product.quantity + 1 };
 					}
+					return product;
 				});
 			}
 		});
+		console.log(`cart items in increasing cart: `, cartItems);
 
-		const fullUrl = `${API_URL}/cart/add_to_cart/${item.id}/`;
-
-		fetch(fullUrl, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"api-key": API_KEY, // Assuming API key authentication
-			},
-		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`API request failed with status ${response.status}`);
-				}
-				return response.json();
-			})
-			.then((responseData) => {
-				console.log("Data added to the db: ", responseData);
-				// Handle successful response, e.g., display a success message
-			})
-			.catch((error) => {
-				// Handle errors gracefully, e.g., display an error message
-				console.error("Error adding product to cart:", error);
-			});
+		addToCartDatabase(item);
 	};
 
 	const handleDecreaseCartQuantity = (item) => {
 		setCartItems((currItems) => {
-			if (currItems.find((product) => item.id === product.id)?.quantity == 1) {
+			if (currItems.find((product) => item.id === product.id)?.quantity === 1) {
 				return currItems.filter((product) => item.id !== product.id);
 			} else {
-				return currItems.map((item) => {
-					if (item.id === product.id) {
-						return { ...item, quantity: item.quantity - 1 };
-					} else return item;
+				return currItems.map((product) => {
+					if (product.id === item.id) {
+						return { ...product, quantity: product.quantity - 1 };
+					} else return product;
 				});
 			}
 		});
 
-		fetch(`${API_URL}/cart/remove_from_cart/${item.id}/`, {
+		const requestBody = {
+			item_id: item.item_id,
+			quantity: 1,
+		};
+
+		fetch(`${API_URL}/cart/remove_from_cart/`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				"api-key": API_KEY, // Assuming API key authentication
 			},
+			body: JSON.stringify(requestBody),
 		})
 			.then((response) => {
 				if (!response.ok) {
@@ -94,8 +81,7 @@ function CartProductContainer(item) {
 		setCartItems((currItems) => {
 			return currItems.filter((product) => product.id !== item.id);
 		});
-
-		console.log(item);
+		console.log("item in removing: ", item);
 
 		const fullUrl = `${API_URL}/cart/delete/${item.id}/`;
 
@@ -193,29 +179,13 @@ const ProductContainer = styled.div`
 	}
 
 	@media (max-width: 600px) {
-		width: 330px;
+		width: 100%;
 		height: 162px;
 
 		.img {
 			width: 70px;
 			height: 76px;
 		}
-	}
-
-	@media screen and (max-width: 430px) {
-		width: 344px;
-	}
-
-	@media screen and (max-width: 400px) {
-		width: 320px;
-	}
-
-	@media screen and (max-width: 380px) {
-		width: 310px;
-	}
-
-	@media screen and (max-width: 365px) {
-		width: 295px;
 	}
 `;
 

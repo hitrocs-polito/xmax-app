@@ -2,11 +2,11 @@ import styled from "styled-components";
 import Center from "../Layout/Center";
 
 const Bg = styled.div`
-	width: 80%;
+	/* width: 100%; */
+	padding: 0 0 0 20px;
 	height: 197px;
 	background-color: #101010;
 	color: #fff;
-	padding: 0px 0;
 	margin: 10px auto 0;
 	border-radius: 30px;
 
@@ -14,8 +14,8 @@ const Bg = styled.div`
 		height: 176px;
 	}
 
-	@media screen and (max-width: 568px) {
-		width: 80%;
+	@media screen and (max-width: 430px) {
+		/* width: 96%; */
 	}
 `;
 
@@ -82,8 +82,8 @@ const Wrapper = styled.div`
 
 function Banner() {
 	return (
-		<Bg>
-			<Center>
+		<Center>
+			<Bg>
 				<Wrapper>
 					<Title>Аксессуары для Iphone 13 Pro Max</Title>
 					<img
@@ -91,8 +91,8 @@ function Banner() {
 						alt="phone_image"
 					/>
 				</Wrapper>
-			</Center>
-		</Bg>
+			</Bg>
+		</Center>
 	);
 }
 

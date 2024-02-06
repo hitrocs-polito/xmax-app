@@ -3,8 +3,9 @@ import Center from "./Center";
 import { FaTelegram, FaInstagram } from "react-icons/fa";
 
 const FooterStyle = styled.div`
+	flex-shrink: 0;
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-columns: repeat(4, 1fr);
 	background-color: white;
 	margin: 20px 0 0;
 	padding: 20px 29px;
@@ -88,39 +89,43 @@ const SocialStyle = styled.ul`
 	}
 `;
 
+const Wrapper = styled.div`
+	flex-shrink: 0;
+`;
+
 function Footer() {
 	return (
-		<Center>
-			<FooterStyle>
-				<FooterTitle>X-MAX MOBILE</FooterTitle>
-				<LinkStyle>
-					<ListStyle>Избранное</ListStyle>
-					<ListStyle>Корзина</ListStyle>
-					<ListStyle>Контакты</ListStyle>
-				</LinkStyle>
-
-				<UlStyle>
-					<ListStyle>Условия сервиса</ListStyle>
-					<LangStyle>
-						<ListStyle>🌐</ListStyle>
-						<ListStyle>Uzb</ListStyle>
+		<Wrapper>
+			<Center>
+				<FooterStyle>
+					<FooterTitle>X-MAX MOBILE</FooterTitle>
+					<LinkStyle>
+						<ListStyle>Избранное</ListStyle>
+						<ListStyle>Корзина</ListStyle>
+						<ListStyle>Контакты</ListStyle>
+					</LinkStyle>
+					<UlStyle>
+						<ListStyle>Условия сервиса</ListStyle>
+						<LangStyle>
+							<ListStyle>🌐</ListStyle>
+							<ListStyle>Uzb</ListStyle>
+							<ListStyle>
+								<b>Рус</b>
+							</ListStyle>
+							<ListStyle>Eng</ListStyle>
+						</LangStyle>
+					</UlStyle>
+					<SocialStyle>
 						<ListStyle>
-							<b>Рус</b>
+							<FaInstagram size={27} />
 						</ListStyle>
-						<ListStyle>Eng</ListStyle>
-					</LangStyle>
-				</UlStyle>
-
-				<SocialStyle>
-					<ListStyle>
-						<FaInstagram size={27} />
-					</ListStyle>
-					<ListStyle>
-						<FaTelegram size={27} />
-					</ListStyle>
-				</SocialStyle>
-			</FooterStyle>
-		</Center>
+						<ListStyle>
+							<FaTelegram size={27} />
+						</ListStyle>
+					</SocialStyle>
+				</FooterStyle>
+			</Center>
+		</Wrapper>
 	);
 }
 

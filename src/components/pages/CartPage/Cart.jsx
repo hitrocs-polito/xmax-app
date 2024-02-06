@@ -12,38 +12,21 @@ import { API_KEY, API_URL } from "../utilities/Constants";
 
 function Cart() {
 	const { cartItems, setCartItems } = useContext(CartContext);
-	const [loading, setLoading] = useState(true);
-	// const totalQty = cartContext.cartItems.reduce((total, cartItem) => {
-	// 	return total + cartItem.price * cartItem.quantity;
-	// }, 0);
+	const totalQty = cartItems.reduce((total, cartItem) => {
+		return cartItem.item
+			? total + cartItem.item.price * cartItem.quantity
+			: total + cartItem.price * cartItem.quantity;
+	}, 0);
 
-	useEffect(() => {
-		const apiUrl = `${API_URL}/cart/`;
-
-		fetch(apiUrl, {
-			headers: {
-				"api-key": API_KEY,
-				"Content-Type": "application/json",
-			},
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				console.log("Cart items from db: ", data);
-
-				setCartItems(data); // update phoneDatabase state with fetched data
-			})
-			.catch((error) => {
-				console.error("Error fetching data:", error);
-			});
-	}, []);
-
-	console.log("Cart from context: ", cartItems);
+	console.log("Items in the cart page: ", cartItems);
 
 	return (
 		<Center>
 			{cartItems?.length === 0 ? (
 				<CartContainer>
-					<EmptyCart width="350px" height="250px" />
+					<CartImage>
+						<EmptyCart width="350px" height="250px" />
+					</CartImage>
 					<Title>Корзина пуста</Title>
 					<SubTitle>Но это никогда не поздно исправить :)</SubTitle>
 
@@ -65,7 +48,9 @@ function Cart() {
 							<TotalDescription>
 								<SummaryText>ИТОГО:</SummaryText>
 								<TotalPrice>
-									{Math.round(50000).toLocaleString("en-US").replace(/,/g, " ")}{" "}
+									{Math.round(totalQty)
+										.toLocaleString("en-US")
+										.replace(/,/g, " ")}{" "}
 									сум
 								</TotalPrice>
 							</TotalDescription>
@@ -88,6 +73,12 @@ const CartContainer = styled.div`
 	margin: 61px auto 127px;
 `;
 
+const CartImage = styled.div`
+	@media screen and (max-width: 350px) {
+		width: 300px;
+	}
+	/* width: 300px; */
+`;
 const Title = styled.h1`
 	color: #101010;
 	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -130,9 +121,14 @@ const SubTitle = styled.p`
 		font-style: normal;
 		font-weight: 500;
 		line-height: normal;
+		text-align: center;
 	}
 
 	@media (max-width: 600px) {
+		font-size: 16px;
+	}
+
+	@media (max-width: 370px) {
 		font-size: 16px;
 	}
 `;
@@ -163,6 +159,10 @@ const StyledButton = styled.button`
 	@media (max-width: 600px) {
 		width: 350px;
 		height: 65px;
+	}
+
+	@media screen and (max-width: 370px) {
+		width: 300px;
 	}
 `;
 
@@ -213,23 +213,7 @@ const TotalPriceContainer = styled.div`
 
 	@media screen and (max-width: 600px) {
 		margin: 0;
-		width: 330px;
-	}
-
-	@media screen and (max-width: 430px) {
-		width: 344px;
-	}
-
-	@media screen and (max-width: 400px) {
-		width: 320px;
-	}
-
-	@media screen and (max-width: 380px) {
-		width: 310px;
-	}
-
-	@media screen and (max-width: 365px) {
-		width: 300px;
+		width: 100%;
 	}
 `;
 
