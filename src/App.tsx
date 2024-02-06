@@ -10,7 +10,7 @@ import "./App.css";
 import { SkeletonTheme } from "react-loading-skeleton";
 import NotFoundPage from "./components/pages/Error404/ErrorPage";
 import CheckoutSection from "./components/pages/CartPage/CheckoutSection";
-import ProductPage from "./components/pages/productDetailPage/ProductPage";
+// import ProductPage from "./components/pages/productDetailPage/ProductPage";
 
 function App() {
 	return (
